@@ -2,11 +2,10 @@
   <div class="page">
     <!-- <Standee /> -->
     
-    
+    <!-- Save <a :href="" download="test.png"> Link </a> -->
     <div class="holder">
       <Can :clear="clear">
         <Stand :stand="stand" v-for="stand in stands"/>
-        <!-- <Stand /> -->
       </Can>
     </div>
     
@@ -39,11 +38,12 @@
             <option value="gt">Gigantic-Short (4X1)</option>
           </select>
         <input v-model="stand.amt" @change="clearMe()" type="number" step="1"/>
-        <croppa v-model="stand.croppa"  canvas-color="#ffffff" :width="stand.ratioWidth || 290" :height="stand.ratioHeight || 478"> </Croppa>
-
-        <button @click="useCrop(stand)"> Use Crop </button>
         <br/>
-        {{stand.id}}
+        <div class="crp">
+          <croppa class="border" v-model="stand.croppa"  canvas-color="#ffffff" :width="stand.ratioWidth || 290" :height="stand.ratioHeight || 478"> </Croppa>
+        </div>
+        <br/>
+        <button @click="useCrop(stand)"> Use Crop </button>
       </div>
     </div>
     </div>
@@ -250,5 +250,14 @@ export default {
   .card-holder{
     overflow: auto;
     height:98vh;
+  }
+
+  .crp{
+    border:1px solid black;
+    margin: 10px;
+  }
+
+  .border{
+    border:1px solid lightgray;
   }
 </style>

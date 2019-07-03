@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
-    {{clear}}
+    <button @click="makeData"> Make Data</button> 
+    <a v-show="imageData" target='_blank' :href='imageData' download="test.png"> Save Data </a>
     <canvas id="page" ref="page"></canvas>
     <slot></slot>
   </div>
@@ -18,6 +19,7 @@ export default {
   },
   data(){
     return {
+      imageData:null,
       provider:{
       context:null
     }
@@ -36,6 +38,22 @@ export default {
   provide () {
     return {
       provider: this.provider
+    }
+  },
+  methods: {
+    makeData:function(){
+      let canvas = this.$refs['page'];
+      console.log('gettingImageData');
+      if (!canvas) 
+      { 
+        setTimeout(()=>{
+          this.$forceUpdate();
+        }, 1000);
+        return 'Loading';
+      }
+
+      this.imageData = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+      console.log(this.imageData);
     }
   },
   watch: {

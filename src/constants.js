@@ -6,10 +6,10 @@ const widths =  {
 }
 
 const heights = {
-  's':{height:243, footsize:140, slots:1},
-  'n':{height:621, footsize:165, slots:2},
-  't':{height:979, footsize:210, slots:3},
-  'g':{height:1332, footsize:260, slots:4},
+  's':{height:223, footsize:160, slots:1},
+  'n':{height:601, footsize:185, slots:2},
+  't':{height:959, footsize:230, slots:3},
+  'g':{height:1312, footsize:280, slots:4},
 }
 
 export default {widths, heights};

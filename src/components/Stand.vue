@@ -61,12 +61,13 @@ export default {
     // ctx.strokeRect(10,20,30,40);
 
     // ctx.clearRect(offsetX, offsetY, 2 *(line))
-
+    ctx.fillStyle = '#FFF'
+    ctx.fillRect(offsetX ,offsetY , width + line, footsize + line);
     ctx.strokeRect(offsetX ,offsetY , width + line, footsize + line);
     ctx.strokeRect(offsetX ,offsetY + footsize + line , width + line, height + line);
     ctx.strokeRect(offsetX ,offsetY + footsize + height + line * 2 , width + line, height+line);
+    ctx.fillRect(offsetX ,offsetY + footsize + height * 2 + line * 3 , width+line , footsize+line);
     ctx.strokeRect(offsetX ,offsetY + footsize + height * 2 + line * 3 , width+line , footsize+line);
-
   var img = new Image;
   img.onload = function(){
     
