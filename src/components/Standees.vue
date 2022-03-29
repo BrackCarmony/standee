@@ -6,6 +6,7 @@
     <div class="exact" id="page">
       <div class="row">
         <Standee :style="{position:'absolute', top:stand.y, left:stand.x}" v-bind="stand" v-for="(stand, i) in positions || []" :key="i+'rt1'"/>
+        {{stand.mirror}}
       </div>
     </div>
     <div class="builder card"> 

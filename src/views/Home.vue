@@ -8,45 +8,84 @@
         <Stand :stand="stand" v-for="stand in stands"/>
       </Can>
     </div>
-    
-    <div class="list">
-    <button @click="addStand"> Add standee </button>
 
-    <button @click="allSmall"> All Small </button>
-    <button @click="allMed"> All Medium </button>
-    <button @click="allLarge"> All Large </button>
-    <button @click="allLargeTall"> All Large-Tall + Small</button>
     
-    <div class="card-holder">
-      <div class="card" v-for="stand in standList" :key="stand.id">
-        <select v-model="stand.size" @change="setSizes(stand)" type="text">
-            <option value="ms">Small (1X1)</option>
-            <option value="mn">Medium (1X2)</option>
-            <option value="ln">Large (2X2)</option>
-            <option value="ht">Huge-Tall (3X3)</option>
-            <option value="gt">Gigantic-Tall (4X3)</option>
-            <option value="gg">Gigantic-Giant (4X4)</option>
-            <option value="hn">Huge (3X2)</option>
-            <option value="gn">Gigantic (4X2)</option>
-            <option value="mt">Medium-Tall (1X3)</option>
-            <option value="lt">Large-Tall (2X3)</option>
-            <option value="mg">Medium-Giant (1X4)</option>
-            <option value="lg">Large-Giant (2X4)</option>
-            <option value="hg">Huge-Giant (3X4)</option>
-            <option value="lt">Long-Short (2X1)</option>
-            <option value="ht">Huge-Short (3X1)</option>
-            <option value="gt">Gigantic-Short (4X1)</option>
-          </select>
-        <input v-model="stand.amt" @change="clearMe()" type="number" step="1"/>
-        <br/>
-        <div class="crp">
-          <croppa class="border" v-model="stand.croppa"  canvas-color="#ffffff" :width="stand.ratioWidth || 290" :height="stand.ratioHeight || 478"> </Croppa>
+    
+      <div class="list">
+
+        <h3 class="center">Set Sizes</h3>
+        <div class="flex-basic">
+          <button @click="allSmall"> 32 Small </button>
+          <button @click="allMed"> 16 Medium </button>
+          <button @click="allLarge"> 8 Large </button>
+          <button @click="addStand"> Add Extra </button>
         </div>
-        <br/>
-        <button @click="useCrop(stand)"> Use Crop </button>
+        
+      
+      
+      <div class="card-holder">
+        <div class="card" v-for="(stand, i) in standList" :key="stand.id">
+          <div class="IdSplit">
+            <div class="half">
+              Type: {{i+1}}
+            </div>
+            <div class="full">
+              Size: 
+              <select v-model="stand.size" @change="setSizes(stand)" type="text">
+                <option value="ms">Small (1X1)</option>
+                <option value="mn">Medium (1X2)</option>
+                <option value="ln">Large (2X2)</option>
+                <option value="ht">Huge-Tall (3X3)</option>
+                <option value="gt">Gigantic-Tall (4X3)</option>
+                <option value="gg">Gigantic-Giant (4X4)</option>
+                <option value="hn">Huge (3X2)</option>
+                <option value="gn">Gigantic (4X2)</option>
+                <option value="mt">Medium-Tall (1X3)</option>
+                <option value="lt">Large-Tall (2X3)</option>
+                <option value="mg">Medium-Giant (1X4)</option>
+                <option value="lg">Large-Giant (2X4)</option>
+                <option value="hg">Huge-Giant (3X4)</option>
+                <option value="lt">Long-Short (2X1)</option>
+                <option value="ht">Huge-Short (3X1)</option>
+                <option value="gt">Gigantic-Short (4X1)</option>
+              </select>
+            </div>
+            <div class = "full"> 
+              Copies:
+              <input class="nopad" 
+                v-model="stand.amt" @change="clearMe()" 
+                type="number" step="1" min="0"
+              />
+            </div>
+            
+          </div>
+          </br>
+          <label :for="stand.id+'m'">
+            Don't Mirror Back: 
+          </label>
+          <input :id="stand.id+'m'" v-model="stand.mirror" type="checkbox" @change="clearMe()"/>
+          <br/>
+
+          <label :for="stand.id+'b'">
+            Different Back Image: 
+          </label>
+          <input :id="stand.id+'b'" v-model="stand.useBack" type="checkbox" @change="clearMe()"/>
+          
+          <croppa class="border" v-model="stand.croppa" canvas-color="#ffffff" 
+            :width="stand.cropWidth || 290" 
+            :height="stand.cropHeight || 478"> </Croppa>
+            <button @click="useCrop(stand)"> Set Image</button>
+          <croppa v-if="stand.useBack" v-model="stand.backCroppa" class="border" canvas-color="#ffffff" 
+            :width="stand.cropWidth || 290" 
+            :height="stand.cropHeight || 478"> </Croppa>
+          <br/>
+          
+          <button  v-if="stand.useBack" @click="useCrop(stand)"> Set Image</button>
+          
+        </div>
       </div>
-    </div>
-    </div>
+      </div>
+    
   </div>
 </template>
 
@@ -54,8 +93,6 @@
 // @ is an alias to /src
 import Can from '@/components/Can.vue'
 import Stand from '@/components/Stand.vue'
-import Standees from '@/components/Standees.vue'
-import Standee from '@/components/Standee.vue'
 import Croppa from 'vue-croppa'
 import Vue from 'vue';
 import sizes from '../constants';
@@ -108,6 +145,8 @@ function size(stand){
   stand.ratioWidth = sizes.widths[w].width;
   stand.height = sizes.heights[h].slots
   stand.ratioHeight = sizes.heights[h].height;
+  stand.cropWidth = stand.ratioWidth / Math.max(stand.ratioWidth, stand.ratioHeight) * 400;
+  stand.cropHeight = stand.ratioHeight / Math.max(stand.ratioWidth, stand.ratioHeight) * 400;;
   
 }
 
@@ -116,13 +155,11 @@ export default {
   components: {
     Can,
     Stand,
-    Standees,
-    Standee,
     // Croppa
   },
   data: ()=>{
     return {
-      standList:new Array(8).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'mn', height:2, width:1, croppa:{}}}),
+      standList:new Array(16).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'mn', height:2, width:1, croppa:{}}}),
       clear:false,
       // croppa:{}
     }
@@ -162,6 +199,10 @@ export default {
     },
     useCrop:function(stand){
       stand.img = stand.croppa.generateDataUrl('png', 0);
+      if (stand.useBack){
+        stand.backImg = stand.backCroppa.generateDataUrl('png', 0);
+      }
+      
       this.clearMe();
       setTimeout(()=>{
         this.standList = [...this.standList]
@@ -172,22 +213,22 @@ export default {
       this.standList = this.standList.filter(e=>e.id != stand.id);
     },
     allMed: function(stand){
-      this.standList = new Array(20).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'mn', croppa:{}}})
+      this.standList = new Array(16).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'mn', croppa:{}}})
       this.standList.forEach(size);
       this.clearMe();
     },
     allLarge: function(stand){
-      this.standList = new Array(10).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'ln', croppa:{}}})
+      this.standList = new Array(8).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'ln', croppa:{}}})
       this.standList.forEach(size);
       this.clearMe();
     },
     allSmall: function(stand){
-      this.standList = new Array(40).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'ms', croppa:{}}})
+      this.standList = new Array(32).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'ms', croppa:{}}})
       this.standList.forEach(size);
       this.clearMe();
     },
     allLargeTall: function(stand){
-      this.standList = [... new Array(5).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'lt', croppa:{}}}), ... new Array(10).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'ms', croppa:{}}})]
+      this.standList = [... new Array(4).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'lt', croppa:{}}}), ... new Array(8).fill(0).map((e,i)=>{ return {id:Math.random(), amt:1, size:'ms', croppa:{}}})]
       this.standList.forEach(size);
       this.clearMe();
     }
@@ -201,7 +242,15 @@ export default {
       let used = new Array()
       let list = this.standList.reduce((arr, cur) => {
         for (var i=0;i<cur.amt;i++){
-          arr.push({size:cur.size, img: cur.img, height: cur.height, width:cur.width})
+          arr.push({  
+            size:cur.size, 
+            img: cur.img, 
+            height: cur.height, 
+            width:cur.width, 
+            mirror: cur.mirror, 
+            useBack: cur.useBack, 
+            backImg: cur.backImg,
+            })
         }
         return arr;
       }, []);
@@ -232,12 +281,15 @@ export default {
   }
 
   .page{
-
-    display:flex;
+    display:flex;  
   }
 
   .list{
     flex:1;
+    padding:4px;
+    background:lightcyan; 
+    border-left: 2px solid black;
+    overflow: none;
   }
 
   .card{
@@ -248,8 +300,10 @@ export default {
   }
 
   .card-holder{
-    overflow: auto;
+    overflow: scroll;
     height:98vh;
+    padding-left:40px;
+    padding-right:40px;
   }
 
   .crp{
@@ -260,4 +314,45 @@ export default {
   .border{
     border:1px solid lightgray;
   }
+
+  .imageSelector{
+    max-width:400px;
+    max-height:400px;
+  }
+
+  .IdSplit {
+    display: flex;
+  }
+  .IdSplit > * {
+    flex:1;
+  }
+
+  .full > *{
+    width: 100%;
+    flex: 2
+  }
+
+  .nopad {
+    padding: 0;
+  }
+
+  .half {
+    flex: .5;
+  }
+  
+  .flex-basic { 
+    display: flex;
+    width:100%;
+  }
+
+  .flex-basic > * {
+    flex: 1;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+
+  
 </style>

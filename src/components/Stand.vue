@@ -38,7 +38,8 @@ export default {
     // if (!this.stand){
     //   this
     // }
-    
+    console.log(`spy: this.stand`, this.stand); // BURN
+    let mirror = false || this.stand.mirror;
     let  x = this.stand.x || 0;
     let  y = this.stand.y || 0;
     let size = this.stand.size || 'mn';
@@ -69,16 +70,45 @@ export default {
     ctx.fillRect(offsetX ,offsetY + footsize + height * 2 + line * 3 , width+line , footsize+line);
     ctx.strokeRect(offsetX ,offsetY + footsize + height * 2 + line * 3 , width+line , footsize+line);
   var img = new Image;
+
   img.onload = function(){
     
     ctx.drawImage(img, offsetX + line/2 , (offsetY + footsize + height + 2.5 * line ), width, height); // Or at whatever offset you like
      
     ctx.save();
-    ctx.scale(1,-1);
-    ctx.drawImage(img, offsetX + line/2 , -(offsetY + footsize + 1 * height + 1.5 * line), width, height); // Or at whatever offset you like
+
+    
+    if (mirror){
+      ctx.scale(-1,-1);  
+      ctx.drawImage(img, - offsetX - line/2 , -(offsetY + footsize + 1 * height + 1.5 * line), -width, height); // Or at whatever offset you 
+    } else {
+      ctx.scale(1,-1);
+      ctx.drawImage(img, offsetX + line/2 , -(offsetY + footsize + 1 * height + 1.5 * line), width, height); // Or at whatever offset you 
+    }
+
+    
     ctx.restore();
   };
   img.src =srcimg;
+  
+  if (this.stand.useBack){
+    var img2 = new Image;
+    console.log(`spy: this.stand--FindMe`, this.stand); // BURN
+    img2.onload = function(){ 
+      ctx.save();
+      if (mirror){
+        ctx.scale(-1,-1);  
+        ctx.drawImage(img2, - offsetX - line/2 , -(offsetY + footsize + 1 * height + 1.5 * line), -width, height); // Or at whatever offset you 
+      } else {
+        ctx.scale(1,-1);
+        ctx.drawImage(img2, offsetX + line/2 , -(offsetY + footsize + 1 * height + 1.5 * line), width, height); // Or at whatever offset you 
+      }
+
+      
+      ctx.restore();
+    };
+    img2.src =this.stand.backImg;
+  }
     
     
 

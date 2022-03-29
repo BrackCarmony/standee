@@ -1,8 +1,14 @@
 <template>
   <div class="hello">
-    <button @click="makeData"> Make Data</button> 
+    <button @click="makeData"> Make Save Link</button> 
     <a v-show="imageData" target='_blank' :href='imageData' download="test.png"> Save Data </a>
-    <canvas id="page" ref="page"></canvas>
+    <br/>
+    <button @click="scale = scale * 1 + 0.1">Zoom In</button>
+    <input style="max-width: 45px; padding-right:0px;" type="number" v-model="scale" step=".1" min=".01" max="2"/>
+    <button @click="scale = scale * 1 - 0.1">Zoom Out</button>
+
+    
+    <canvas  :style="{transform: 'scale(' + scale +')', transformOrigin:'0 0'}" class="corner bordered" id="page" ref="page"></canvas>
     <slot></slot>
   </div>
 </template>
@@ -19,6 +25,7 @@ export default {
   },
   data(){
     return {
+      scale: 1,
       imageData:null,
       provider:{
       context:null
@@ -85,5 +92,12 @@ li {
 }
 a {
   color: #42b983;
+}
+
+
+
+.hello {
+  background: rgb(240,240,240);
+  padding:5px;
 }
 </style>

@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath:'/standee'
+  // publicPath:'/standee'
 }
