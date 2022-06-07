@@ -1,11 +1,11 @@
 <template>
   <div class="hello">
-    <button @click="makeData"> Make Save Link</button> 
+    <button @click="makeData"> Make Save Link <Note>Usually you can just right click the image and save it.  If that method fails, you can make a link and have the browser download it that way.</Note></button> 
     <a v-show="imageData" target='_blank' :href='imageData' download="test.png"> Save Data </a>
     <br/>
-    <button @click="scale = scale * 1 + 0.1">Zoom In</button>
+    <button @click="scale = scale * 1 + 0.1">Zoom In <Note>Does not effect the size of the image generated.</Note></button>
     <input style="max-width: 45px; padding-right:0px;" type="number" v-model="scale" step=".1" min=".01" max="2"/>
-    <button @click="scale = scale * 1 - 0.1">Zoom Out</button>
+    <button @click="scale = scale * 1 - 0.1">Zoom Out <Note>Does not effect the size of the image generated.</Note></button>
 
     
     <canvas  :style="{transform: 'scale(' + scale +')', transformOrigin:'0 0'}" class="corner bordered" id="page" ref="page"></canvas>

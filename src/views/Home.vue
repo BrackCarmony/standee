@@ -13,12 +13,12 @@
     
       <div class="list">
 
-        <h3 class="center">Set Sizes</h3>
+        <h3 class="center">Set Sizes <Note>Sets the page to have all uniform sized standees of the given size. Defaults to 16 medium creatures.</Note></h3>
         <div class="flex-basic">
           <button @click="allSmall"> 32 Small </button>
           <button @click="allMed"> 16 Medium </button>
           <button @click="allLarge"> 8 Large </button>
-          <button @click="addStand"> Add Extra </button>
+          <button @click="addStand"> Add Extra <Note>If you want to use mixed sizes you can use this to add additional Standees so long as it fits on the page.</Note></button>
         </div>
         
       
@@ -27,10 +27,10 @@
         <div class="card" v-for="(stand, i) in standList" :key="stand.id">
           <div class="IdSplit">
             <div class="half">
-              Type: {{i+1}}
+              Type: {{i+1}} <Note>Just keeping tabs on the different images you're using.</Note>
             </div>
             <div class="full">
-              Size: 
+              Size: <Note>Some non standard sizes, but under the hood it's just a 16X4 grid, so if you want to make an extra long but short standee for a wall or snake, feel free.</Note>
               <select v-model="stand.size" @change="setSizes(stand)" type="text">
                 <option value="ms">Small (1X1)</option>
                 <option value="mn">Medium (1X2)</option>
@@ -51,7 +51,7 @@
               </select>
             </div>
             <div class = "full"> 
-              Copies:
+              Copies: <Note>You can set an image to be used for multiple standees.</Note>
               <input class="nopad" 
                 v-model="stand.amt" @change="clearMe()" 
                 type="number" step="1" min="0"
@@ -61,13 +61,13 @@
           </div>
           </br>
           <label :for="stand.id+'m'">
-            Don't Mirror Back: 
+            Don't Mirror Back: <Note>By default the back side of the standee is mirrored, if you don't want this you can turn it of for a standee.  Particularly useful is there is text on the image you don't want to reflect.</Note>
           </label>
           <input :id="stand.id+'m'" v-model="stand.mirror" type="checkbox" @change="clearMe()"/>
           <br/>
 
           <label :for="stand.id+'b'">
-            Different Back Image: 
+            Different Back Image: <Note>You can use a second image for the back if you are so inclined.You'll just have to crop a second image.</Note> 
           </label>
           <input :id="stand.id+'b'" v-model="stand.useBack" type="checkbox" @change="clearMe()"/>
           
@@ -75,11 +75,11 @@
             :width="stand.cropWidth || 290" 
             :height="stand.cropHeight || 478"> </Croppa>
             <button @click="useCrop(stand)"> Set Image</button>
+
           <croppa v-if="stand.useBack" v-model="stand.backCroppa" class="border" canvas-color="#ffffff" 
             :width="stand.cropWidth || 290" 
             :height="stand.cropHeight || 478"> </Croppa>
           <br/>
-          
           <button  v-if="stand.useBack" @click="useCrop(stand)"> Set Image</button>
           
         </div>
